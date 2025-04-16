@@ -1,29 +1,26 @@
-# 랜딩 페이지 템플릿 라이브러리
+# 스토리메이커 - AI 소설 플랫폼
 
-다양한 목적에 맞는 랜딩 페이지 템플릿을 제공하는 라이브러리입니다. 제품, 서비스, 이벤트 등 여러 용도에 맞게 쉽고 빠르게 랜딩 페이지를 생성할 수 있습니다.
+AI와 함께 당신의 소설을 쉽게 완성할 수 있는 플랫폼, 스토리메이커의 랜딩 페이지입니다. 하루 1시간만 투자해도 퀄리티 높은 소설을 쓰고 수익화까지 가능한 서비스를 소개합니다.
 
-## 특징
+## 프로젝트 소개
 
-- **재사용 가능한 템플릿**: 핵심 컴포넌트를 재사용하여 다양한 랜딩 페이지 생성
-- **빠른 개발**: 기획 1일, 개발 1일, 광고 세팅 1일, 데이터 수집 1주일, 분석 1일로 약 2주 내에 완료 가능
-- **반응형 디자인**: 모든 디바이스에서 최적화된 경험 제공
-- **커스터마이징 용이**: 컨텐츠 및 디자인 요소를 손쉽게 변경 가능
-- **검증된 구조**: 전환율에 최적화된 구조와 디자인
+이 레포지토리는 스토리메이커 서비스의 사업성 검증을 위한 랜딩 페이지를 포함하고 있습니다. 구글 애즈 광고를 집행하여 서비스에 대한 사전 예약 및 관심도를 측정하기 위한 목적으로 제작되었습니다.
 
-## 예시 페이지
+## 주요 특징
 
-- **제품 랜딩 페이지**: 제품 소개 및 판매를 위한 최적화된 랜딩 페이지
-- **서비스 랜딩 페이지**: 전문 서비스 비즈니스를 위한 특화된 랜딩 페이지
-- **이벤트 랜딩 페이지**: 특별 할인, 프로모션 이벤트에 최적화된 랜딩 페이지
+- **AI 작문 어시스턴트**: 플롯 구성, 캐릭터 개발, 문장 개선까지 AI가 당신의 글쓰기를 도와줍니다
+- **하루 1시간으로 충분**: 짧은 시간에도 효율적으로 소설을 진행할 수 있는 맞춤형 시스템
+- **수익화 시스템**: 구독 모델, 팁 시스템으로 당신의 창작물로 수익을 창출할 수 있습니다
+- **글쓰기 커뮤니티**: 다른 작가들과 소통하고 피드백을 주고받으며 함께 성장하세요
 
 ## 시작하기
 
 ```bash
 # 저장소 클론
-git clone https://github.com/wjb127/landing-mvp.git
+git clone https://github.com/your-username/ai-story-platform.git
 
 # 디렉토리 이동
-cd landing-mvp
+cd ai-story-platform
 
 # 의존성 설치
 npm install
@@ -32,97 +29,31 @@ npm install
 npm run dev
 ```
 
-## 템플릿을 활용한 새 프로젝트 만들기
-
-이 템플릿을 기반으로 새로운 프로젝트를 만들고 다른 GitHub 저장소에 업로드하는 방법입니다:
-
-### 1. 템플릿 클론하기
-
-```bash
-# 템플릿 저장소를 새 이름으로 클론
-git clone https://github.com/wjb127/landing-mvp.git my-landing-page
-
-# 새 프로젝트 디렉토리로 이동
-cd my-landing-page
-```
-
-### 2. Git 연결 초기화하기
-
-```bash
-# .git 디렉토리 삭제 (기존 Git 히스토리 제거)
-rm -rf .git
-
-# 새 Git 저장소 초기화
-git init
-
-# 모든 파일 스테이징
-git add .
-
-# 첫 커밋 생성
-git commit -m "초기 커밋: 랜딩 페이지 템플릿 기반"
-```
-
-### 3. 새 GitHub 저장소 만들기
-
-1. GitHub 웹사이트에서 새 저장소 생성 (예: `my-project-landing`)
-2. 저장소를 비어있는 상태로 생성 (README, 라이센스 등 추가하지 않음)
-
-### 4. 로컬 저장소를 새 GitHub 저장소에 연결하기
-
-```bash
-# 원격 저장소 연결
-git remote add origin https://github.com/your-username/my-project-landing.git
-
-# 원격 저장소로 푸시
-git push -u origin main  # 또는 master (Git 버전에 따라 다름)
-```
-
-### 5. 템플릿 커스터마이징하기
-
-내용을 프로젝트에 맞게 수정합니다:
-
-- `package.json`의 이름과 버전 업데이트
-- `src/app/components/LandingTemplate.tsx`를 기반으로 내용 커스터마이징
-- 예시 페이지들을 참고하여 필요한 랜딩 페이지 생성
-
-### 6. 변경사항 커밋 및 푸시
-
-```bash
-git add .
-git commit -m "랜딩 페이지 내용 커스터마이징"
-git push
-```
-
 ## 기술 스택
 
-- Next.js
+- Next.js 14
 - React
 - Tailwind CSS
 - TypeScript
+- Supabase (사용자 데이터 수집 및 분석)
 
-## 사용 예시
+## 프로젝트 구조
 
-```tsx
-import LandingTemplate from "../components/LandingTemplate";
-
-export default function CustomLandingPage() {
-  return (
-    <LandingTemplate
-      title="나만의 랜딩 페이지 제목"
-      subtitle="부제목을 입력하세요"
-      primaryCTA={{
-        text: "지금 시작하기",
-        href: "/start",
-      }}
-      // 기타 필요한 속성들 추가
-    />
-  );
-}
+```
+/public            - 정적 파일(이미지, 아이콘 등)
+/src
+  /app            - Next.js 페이지 컴포넌트
+    /components   - 재사용 가능한 UI 컴포넌트
+  /utils          - 유틸리티 함수 및 API 클라이언트
 ```
 
-## 라이선스
+## 사업성 검증 방법론
 
-MIT
+1. **랜딩 페이지 구현**: 서비스 가치 제안과 핵심 기능을 명확히 전달
+2. **가상 결제 버튼 구현**: Supabase로 클릭률 및 전환율 측정
+3. **구글 애즈 광고 집행**: 타겟 고객층에게 랜딩 페이지 노출
+4. **데이터 수집 및 분석**: 페이지 방문, 버튼 클릭, 이메일 등록 등의 지표 분석
+5. **MVP 개발 여부 결정**: 수집된 데이터를 바탕으로 실제 서비스 개발 진행 여부 결정
 
 ## Supabase 설정
 
@@ -161,4 +92,15 @@ MIT
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
    ```
 
-이제 버튼 클릭 이벤트와 사전 예약 이메일이 Supabase 데이터베이스에 저장됩니다. Supabase 대시보드에서 수집된 데이터를 확인할 수 있습니다.
+## 환경 변수 설정
+
+`.env.local` 파일을 생성하고 다음 변수를 설정하세요:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+## 라이선스
+
+MIT
