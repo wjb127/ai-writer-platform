@@ -5,11 +5,13 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // 더미 클라이언트 타입 정의
+/* eslint-disable @typescript-eslint/no-unused-vars */
 type DummyClient = {
-  from: (__table: string) => {
+  from: (table: string) => {
     insert: (data: unknown[]) => Promise<{ error: null }>;
   };
 };
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 // Supabase 클라이언트 생성 (환경 변수가 없으면 더미 클라이언트 생성)
 let supabase: SupabaseClient | DummyClient;
@@ -19,14 +21,16 @@ if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 } else {
   // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   supabase = {
-    from: (__table: string) => ({
+    from: (table: string) => ({
       insert: (data: unknown[]) => {
         console.log('Supabase not configured. Would insert:', data);
         return Promise.resolve({ error: null });
       }
     })
   };
+  /* eslint-enable @typescript-eslint/no-unused-vars */
   console.warn('Supabase URL or Key not properly configured. Using dummy client.');
 }
 
