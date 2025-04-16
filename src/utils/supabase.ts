@@ -85,6 +85,47 @@ GRANT USAGE ON SCHEMA storymaker TO anon, authenticated, service_role;
 GRANT ALL ON ALL TABLES IN SCHEMA storymaker TO anon, authenticated, service_role;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA storymaker TO anon, authenticated, service_role;
 
+-- RLS(Row Level Security) 활성화
+ALTER TABLE storymaker.button_clicks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE storymaker.leads ENABLE ROW LEVEL SECURITY;
+
+-- 익명 사용자를 위한 RLS 정책 생성 (INSERT만 허용)
+CREATE POLICY "익명 사용자 버튼 클릭 삽입 허용" ON storymaker.button_clicks
+  FOR INSERT WITH CHECK (true);
+  
+CREATE POLICY "익명 사용자 리드 정보 삽입 허용" ON storymaker.leads
+  FOR INSERT WITH CHECK (true);
+  
+-- 관리자(authenticated)를 위한 모든 권한 정책 생성
+CREATE POLICY "관리자 버튼 클릭 모든 권한" ON storymaker.button_clicks
+  FOR ALL TO authenticated USING (true);
+  
+CREATE POLICY "관리자 리드 정보 모든 권한" ON storymaker.leads
+  FOR ALL TO authenticated USING (true);
+  
+-- 데이터 조회를 위한 뷰 생성 (보안 강화)
+CREATE VIEW storymaker.button_clicks_stats AS
+  SELECT 
+    button_type, 
+    COUNT(*) as click_count,
+    MIN(created_at) as first_click,
+    MAX(created_at) as last_click
+  FROM storymaker.button_clicks
+  GROUP BY button_type;
+
+CREATE VIEW storymaker.leads_stats AS
+  SELECT 
+    source,
+    COUNT(*) as lead_count,
+    MIN(created_at) as first_lead,
+    MAX(created_at) as last_lead
+  FROM storymaker.leads
+  GROUP BY source;
+
+-- 뷰에 대한 접근 권한 설정
+GRANT SELECT ON storymaker.button_clicks_stats TO authenticated;
+GRANT SELECT ON storymaker.leads_stats TO authenticated;
+
 -- 스키마 존재 확인용 함수 생성
 CREATE OR REPLACE FUNCTION public.check_schema_exists(schema_name text)
 RETURNS boolean
