@@ -15,10 +15,6 @@ type DummyClient = {
 // Supabase 클라이언트 생성 (환경 변수가 없으면 더미 클라이언트 생성)
 let supabase: SupabaseClient<any, "storymaker", any> | DummyClient;
 
-// Database, SchemaName 타입 정의
-type Database = Record<string, unknown>;
-type SchemaName = "storymaker";
-
 // 유효한 URL과 키가 있을 때만 실제 Supabase 클라이언트 생성
 if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
   supabase = createClient(supabaseUrl, supabaseAnonKey, {
