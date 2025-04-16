@@ -107,9 +107,9 @@ export default function LandingTemplate({
       });
     } else if (linkType === 'secondary') {
       setPopupMessage({
-        title: "무료체험 안내",
-        message: "출시 후 2주간 모든 기능을 무료로 사용하실 수 있습니다. 지금 사전 예약하세요.",
-        formType: "free_trial"
+        title: "무료체험 준비중",
+        message: "현재 무료체험 서비스를 준비중입니다. 조금만 기다려주세요.",
+        formType: ""  // 폼 타입을 비워서 리드 수집 폼이 표시되지 않도록 함
       });
     } else if (linkType === 'nav') {
       setPopupMessage({
