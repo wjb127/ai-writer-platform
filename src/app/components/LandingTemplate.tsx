@@ -98,18 +98,21 @@ export default function LandingTemplate({
       });
     }
     
-    // 링크 유형에 따라 다른 메시지 설정
+    // 링크 유형에 따라 다른 메시지 설정 및 팝업 표시
+    let newFormType = "";
+    
     if (linkType === 'primary') {
       setPopupMessage({
         title: "구독 신청 안내",
         message: "현재 사전 예약을 받고 있습니다. 출시 시 가장 먼저 알려드립니다.",
         formType: "signup"
       });
+      newFormType = "signup";
     } else if (linkType === 'secondary') {
       setPopupMessage({
         title: "무료체험 준비중",
         message: "현재 무료체험 서비스를 준비중입니다. 조금만 기다려주세요.",
-        formType: ""  // 폼 타입을 비워서 리드 수집 폼이 표시되지 않도록 함
+        formType: ""
       });
     } else if (linkType === 'nav') {
       setPopupMessage({
@@ -133,10 +136,12 @@ export default function LandingTemplate({
     
     setShowPopup(true);
     
-    // 3초 후 팝업 자동 닫기
-    setTimeout(() => {
-      setShowPopup(false);
-    }, 3000);
+    // 리드 수집 폼이 없는 경우에만 3초 후 팝업 자동 닫기
+    if (newFormType === "") {
+      setTimeout(() => {
+        setShowPopup(false);
+      }, 3000);
+    }
   };
 
   return (
