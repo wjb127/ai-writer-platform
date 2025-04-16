@@ -1,11 +1,18 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Supabase 환경 변수 확인
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+// 더미 클라이언트 타입 정의
+type DummyClient = {
+  from: (table: string) => {
+    insert: (data: unknown[]) => Promise<{ error: null }>;
+  };
+};
+
 // Supabase 클라이언트 생성 (환경 변수가 없으면 더미 클라이언트 생성)
-let supabase: any;
+let supabase: SupabaseClient | DummyClient;
 
 // 유효한 URL과 키가 있을 때만 실제 Supabase 클라이언트 생성
 if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
@@ -13,8 +20,8 @@ if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
 } else {
   // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
   supabase = {
-    from: () => ({
-      insert: (data: any) => {
+    from: (table: string) => ({
+      insert: (data: unknown[]) => {
         console.log('Supabase not configured. Would insert:', data);
         return Promise.resolve({ error: null });
       }
@@ -26,7 +33,7 @@ if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
 export { supabase };
 
 // 버튼 클릭 이벤트 추적 함수
-export const trackButtonClick = async (buttonType: string, userInfo: Record<string, any> = {}) => {
+export const trackButtonClick = async (buttonType: string, userInfo: Record<string, unknown> = {}) => {
   try {
     if (!supabaseUrl || !supabaseAnonKey) {
       console.log(`[개발 모드] 버튼 클릭 추적: ${buttonType}`, userInfo);

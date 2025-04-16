@@ -277,7 +277,7 @@ export default function LandingTemplate({
                   key={index}
                   className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-gray-100 dark:border-gray-700"
                 >
-                  <p className="text-lg italic mb-4">"{testimonial.quote}"</p>
+                  <p className="text-lg italic mb-4">&ldquo;{testimonial.quote}&rdquo;</p>
                   <div className="flex items-center gap-3">
                     {testimonial.avatar && (
                       <Image
