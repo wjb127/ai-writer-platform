@@ -60,11 +60,14 @@ npm run dev
 이 프로젝트는 버튼 클릭 이벤트와 리드 수집을 추적하기 위해 Supabase를 사용합니다. 다음 단계에 따라 설정하세요:
 
 1. [Supabase](https://supabase.com/) 계정을 만들고 새 프로젝트를 생성합니다.
-2. 프로젝트에서 다음 테이블을 생성하세요:
+2. 프로젝트에서 다음 SQL을 실행하여 스키마와 테이블을 생성하세요:
    
-   **button_clicks 테이블**
    ```sql
-   CREATE TABLE button_clicks (
+   -- 스토리메이커 프로젝트를 위한 별도 스키마 생성
+   CREATE SCHEMA storymaker;
+   
+   -- 버튼 클릭 추적 테이블
+   CREATE TABLE storymaker.button_clicks (
      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
      button_type TEXT NOT NULL,
      user_ip TEXT,
@@ -74,16 +77,19 @@ npm run dev
      button_url TEXT,
      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
    );
-   ```
-
-   **leads 테이블**
-   ```sql
-   CREATE TABLE leads (
+   
+   -- 리드(이메일) 수집 테이블
+   CREATE TABLE storymaker.leads (
      id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
      email TEXT NOT NULL UNIQUE,
      source TEXT,
      created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
    );
+   
+   -- 스키마에 대한 접근 권한 설정
+   GRANT USAGE ON SCHEMA storymaker TO anon, authenticated, service_role;
+   GRANT ALL ON ALL TABLES IN SCHEMA storymaker TO anon, authenticated, service_role;
+   GRANT ALL ON ALL SEQUENCES IN SCHEMA storymaker TO anon, authenticated, service_role;
    ```
 
 3. Supabase 프로젝트의 URL과 익명 키를 프로젝트 루트의 `.env.local` 파일에 추가하세요:
