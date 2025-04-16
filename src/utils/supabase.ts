@@ -6,7 +6,7 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
 // 더미 클라이언트 타입 정의
 type DummyClient = {
-  from: (table: string) => {
+  from: (_table: string) => {
     insert: (data: unknown[]) => Promise<{ error: null }>;
   };
 };
@@ -20,7 +20,7 @@ if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
 } else {
   // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
   supabase = {
-    from: (table: string) => ({
+    from: (_table: string) => ({
       insert: (data: unknown[]) => {
         console.log('Supabase not configured. Would insert:', data);
         return Promise.resolve({ error: null });
