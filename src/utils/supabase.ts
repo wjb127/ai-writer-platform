@@ -14,11 +14,15 @@ type DummyClient = {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 // Supabase 클라이언트 생성 (환경 변수가 없으면 더미 클라이언트 생성)
-let supabase: SupabaseClient | DummyClient;
+let supabase: SupabaseClient<any, "storymaker", any> | DummyClient;
 
 // 유효한 URL과 키가 있을 때만 실제 Supabase 클라이언트 생성
 if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    db: {
+      schema: 'storymaker'
+    }
+  });
 } else {
   // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
   /* eslint-disable @typescript-eslint/no-unused-vars */
@@ -56,7 +60,7 @@ export const trackButtonClick = async (buttonType: string, userInfo: Record<stri
 
     // 클릭 이벤트 저장
     const { error } = await supabase
-      .from('storymaker.button_clicks')
+      .from('button_clicks')
       .insert([
         { 
           button_type: buttonType,
@@ -84,7 +88,7 @@ export const saveLeadInfo = async (email: string, buttonType: string) => {
     }
 
     const { error } = await supabase
-      .from('storymaker.leads')
+      .from('leads')
       .insert([{ 
         email, 
         source: buttonType,
