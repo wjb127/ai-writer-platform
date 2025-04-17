@@ -23,6 +23,7 @@ interface Lead {
   id: string;
   email: string;
   source: string;
+  marketing_consent: boolean;
   created_at: string;
 }
 
@@ -208,6 +209,7 @@ CREATE TABLE sm_leads (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email TEXT NOT NULL UNIQUE,
   source TEXT,
+  marketing_consent BOOLEAN,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -463,6 +465,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                     <tr className="border-b">
                       <th className="text-left py-2">이메일</th>
                       <th className="text-left py-2">소스</th>
+                      <th className="text-left py-2">마케팅 동의</th>
                       <th className="text-left py-2">등록일</th>
                     </tr>
                   </thead>
@@ -471,6 +474,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                       <tr key={lead.id} className="border-b">
                         <td className="py-2">{lead.email}</td>
                         <td className="py-2">{lead.source}</td>
+                        <td className="py-2">{lead.marketing_consent ? '동의함' : '동의하지 않음'}</td>
                         <td className="py-2">{formatDate(lead.created_at)}</td>
                       </tr>
                     ))}
