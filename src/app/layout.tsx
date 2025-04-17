@@ -11,9 +11,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // 환경 변수를 통해 대시보드 링크 표시 여부 결정
-  const showDashboardLink = process.env.NEXT_PUBLIC_SHOW_DASHBOARD_LINK === 'true';
-  
   return (
     <html lang="ko">
       <body>
@@ -28,11 +25,6 @@ export default function RootLayout({
                   <a href="/" className="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                     홈
                   </a>
-                  {showDashboardLink && (
-                    <a href="/dashboard" className="border-transparent text-gray-500 hover:border-blue-500 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                      대시보드
-                    </a>
-                  )}
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
