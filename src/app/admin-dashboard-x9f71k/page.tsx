@@ -23,6 +23,7 @@ interface Lead {
   id: string;
   email: string;
   source: string;
+  marketing_consent: boolean;
   created_at: string;
 }
 
@@ -487,6 +488,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                     <tr className="border-b">
                       <th className="text-left py-2">이메일</th>
                       <th className="text-left py-2">소스</th>
+                      <th className="text-left py-2">마케팅 수신동의</th>
                       <th className="text-left py-2">등록일</th>
                     </tr>
                   </thead>
@@ -495,6 +497,11 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                       <tr key={lead.id} className="border-b">
                         <td className="py-2">{lead.email}</td>
                         <td className="py-2">{getSourceTypeInKorean(lead.source)}</td>
+                        <td className="py-2">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${lead.marketing_consent ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                            {lead.marketing_consent ? '동의함' : '동의하지 않음'}
+                          </span>
+                        </td>
                         <td className="py-2">{formatDate(lead.created_at)}</td>
                       </tr>
                     ))}
