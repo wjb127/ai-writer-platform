@@ -33,6 +33,30 @@ interface PieChartLabel {
   percent: number;
 }
 
+// 버튼 타입을 한국어로 변환하는 함수
+const getButtonTypeInKorean = (buttonType: string): string => {
+  const buttonTypeMap: Record<string, string> = {
+    'signup_button': '가입 버튼',
+    'free_trial_button': '무료 체험 버튼',
+    'primary': '메인 버튼',
+    'secondary': '보조 버튼',
+    'signup': '가입 신청',
+    'free_trial': '무료 체험 신청',
+  };
+  
+  return buttonTypeMap[buttonType] || buttonType;
+};
+
+// 소스 타입을 한국어로 변환하는 함수
+const getSourceTypeInKorean = (sourceType: string): string => {
+  const sourceTypeMap: Record<string, string> = {
+    'signup': '가입 신청',
+    'free_trial': '무료 체험 신청',
+  };
+  
+  return sourceTypeMap[sourceType] || sourceType;
+};
+
 export default function AdminDashboard() {
   const [buttonStats, setButtonStats] = useState<ButtonClickStats[]>([]);
   const [leadStats, setLeadStats] = useState<LeadStats[]>([]);
@@ -323,7 +347,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                         <YAxis />
                         <Tooltip 
                           formatter={(value: number, name: string) => [`${value}회`, '클릭 수']}
-                          labelFormatter={(label: string) => `버튼: ${label}`}
+                          labelFormatter={(label: string) => `버튼: ${getButtonTypeInKorean(label)}`}
                         />
                         <Legend />
                         <Bar dataKey="click_count" name="클릭 수" fill="#3B82F6" />
@@ -397,7 +421,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                       <tbody>
                         {buttonStats.map((stat, index) => (
                           <tr key={index} className="border-b">
-                            <td className="py-2">{stat.button_type}</td>
+                            <td className="py-2">{getButtonTypeInKorean(stat.button_type)}</td>
                             <td className="py-2">{stat.click_count}</td>
                             <td className="py-2">{formatDate(stat.first_click)}</td>
                             <td className="py-2">{formatDate(stat.last_click)}</td>
@@ -427,7 +451,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                       <tbody>
                         {leadStats.map((stat, index) => (
                           <tr key={index} className="border-b">
-                            <td className="py-2">{stat.source}</td>
+                            <td className="py-2">{getSourceTypeInKorean(stat.source)}</td>
                             <td className="py-2">{stat.lead_count}</td>
                             <td className="py-2">{formatDate(stat.first_lead)}</td>
                             <td className="py-2">{formatDate(stat.last_lead)}</td>
@@ -470,7 +494,7 @@ GRANT SELECT ON sm_leads_stats TO authenticated;`}
                     {leads.map((lead) => (
                       <tr key={lead.id} className="border-b">
                         <td className="py-2">{lead.email}</td>
-                        <td className="py-2">{lead.source}</td>
+                        <td className="py-2">{getSourceTypeInKorean(lead.source)}</td>
                         <td className="py-2">{formatDate(lead.created_at)}</td>
                       </tr>
                     ))}
