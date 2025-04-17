@@ -69,6 +69,7 @@ CREATE TABLE sm_leads (
   id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   email TEXT NOT NULL UNIQUE,
   source TEXT,
+  marketing_consent BOOLEAN,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
@@ -206,11 +207,22 @@ export const saveLeadInfo = async (email: string, buttonType: string) => {
       return true;
     }
 
+    // 마케팅 수신 동의 정보 추출 (buttonType에서)
+    let source = buttonType;
+    let hasMarketingConsent = false;
+    
+    if (buttonType.includes('_marketing_')) {
+      const parts = buttonType.split('_marketing_');
+      source = parts[0];
+      hasMarketingConsent = parts[1] === 'yes';
+    }
+
     const { error } = await supabase
       .from('sm_leads')
       .insert([{ 
         email, 
-        source: buttonType,
+        source: source,
+        marketing_consent: hasMarketingConsent,
         created_at: new Date().toISOString() 
       }]);
 
