@@ -8,8 +8,11 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 type DummyClient = {
   from: (table: string) => {
     insert: (data: unknown[]) => Promise<{ error: null }>;
-    select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => 
-      Promise<{ data: null; error: { code: string } }>;
+    select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => {
+      order: (column: string, options?: { ascending?: boolean }) => Promise<{ data: null; error: { code: string; message: string } }>;
+      data: null;
+      error: { code: string; message: string };
+    };
   };
   rpc: (fn: string, params?: Record<string, unknown>) => Promise<{ data: unknown; error: null | Error }>;
 };
@@ -116,26 +119,42 @@ GRANT SELECT ON sm_leads_stats TO authenticated;
   initializeTables().catch(console.error);
   
 } else {
-  // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  supabase = {
-    from: (table: string) => ({
-      insert: (data: unknown[]) => {
-        console.log('Supabase not configured. Would insert:', data);
-        return Promise.resolve({ error: null });
-      },
-      select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => {
-        console.log('Supabase not configured. Would select:', column, options);
-        return Promise.resolve({ data: null, error: { code: '404' } });
+  // Supabase 클라이언트 생성 (또는 API 키가 없는 경우 더미 클라이언트)
+  const createClient = (): DummyClient => {
+    // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    let _client: DummyClient;
+    
+    _client = {
+      from: ((table: string) => ({
+        insert: (data: unknown[]) => {
+          console.log('Supabase not configured. Would insert into', table, ':', data);
+          return Promise.resolve({ error: null });
+        },
+        select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => {
+          console.log('Supabase not configured. Would select:', column, options);
+          return {
+            order: (column: string, options?: { ascending?: boolean }) => {
+              console.log('Supabase not configured. Would order by:', column, options);
+              return Promise.resolve({ data: null, error: { code: '404', message: 'Supabase not configured' } });
+            },
+            data: null,
+            error: { code: '404', message: 'Supabase not configured' }
+          };
+        }
+      })),
+      rpc: (fn: string, params?: Record<string, unknown>) => {
+        console.log('Supabase not configured. Would call RPC function:', fn, params);
+        return Promise.resolve({ data: null, error: null });
       }
-    }),
-    rpc: (fn: string, params?: Record<string, unknown>) => {
-      console.log(`Supabase not configured. Would call RPC: ${fn}`, params);
-      return Promise.resolve({ data: false, error: null });
-    }
+    };
+    
+    console.warn('Supabase URL or Key not properly configured. Using dummy client.');
+    return _client;
+    /* eslint-enable @typescript-eslint/no-unused-vars */
   };
-  /* eslint-enable @typescript-eslint/no-unused-vars */
-  console.warn('Supabase URL or Key not properly configured. Using dummy client.');
+  
+  supabase = createClient();
 }
 
 export { supabase };
