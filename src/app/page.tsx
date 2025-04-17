@@ -1,5 +1,6 @@
 import LandingTemplate from "./components/LandingTemplate";
 import FeaturesWithImages from "./components/FeaturesWithImages";
+import Footer from "./components/Footer";
 
 export default function Home() {
   const featuresWithImages = [
@@ -27,6 +28,19 @@ export default function Home() {
       imageSrc: "/images/community.jpg",
       imageAlt: "글쓰기 커뮤니티 이미지"
     }
+  ];
+
+  // 푸터 링크 설정
+  const footerLinks = [
+    { title: "서비스 소개", href: "/about" },
+    { title: "성공 사례", href: "/success-stories" },
+    { title: "요금제", href: "/pricing" },
+    { title: "작가 가이드", href: "/guide" },
+    { title: "AI 기능", href: "/ai-features" },
+    { title: "커뮤니티", href: "/community" },
+    { title: "자주 묻는 질문", href: "/faq" },
+    { title: "이용약관", href: "/terms" },
+    { title: "개인정보처리방침", href: "/privacy" },
   ];
 
   return (
@@ -90,17 +104,8 @@ export default function Home() {
             answer: "모든 작품의 저작권은 작가 본인에게 있으며, 플랫폼은 배포 권한만 가집니다. 블록체인 기술로 저작권을 안전하게 보호합니다.",
           },
         ]}
-        footerLinks={[
-          { title: "서비스 소개", href: "/about" },
-          { title: "성공 사례", href: "/success-stories" },
-          { title: "요금제", href: "/pricing" },
-          { title: "작가 가이드", href: "/guide" },
-          { title: "AI 기능", href: "/ai-features" },
-          { title: "커뮤니티", href: "/community" },
-          { title: "자주 묻는 질문", href: "/faq" },
-          { title: "이용약관", href: "/terms" },
-          { title: "개인정보처리방침", href: "/privacy" },
-        ]}
+        // 푸터 없이 렌더링하도록 설정
+        footerLinks={[]} 
       />
 
       {/* 이미지가 포함된 상세 특징 섹션 */}
@@ -108,6 +113,9 @@ export default function Home() {
         title="AI 소설 플랫폼의 특별함" 
         features={featuresWithImages} 
       />
+
+      {/* 클라이언트 컴포넌트로 분리된 푸터 사용 */}
+      <Footer links={footerLinks} />
     </>
   );
 }
