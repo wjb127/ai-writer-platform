@@ -9,9 +9,9 @@ type DummyClient = {
   from: (table: string) => {
     insert: (data: unknown[]) => Promise<{ error: null }>;
     select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => {
-      order: (column: string, options?: { ascending?: boolean }) => Promise<{ data: null; error: { code: string; message: string } }>;
-      data: null;
-      error: { code: string; message: string };
+      order: (column: string, options?: { ascending?: boolean }) => Promise<{ data: any[]; error: null }>;
+      data: any[];
+      error: null;
     };
   };
   rpc: (fn: string, params?: Record<string, unknown>) => Promise<{ data: unknown; error: null | Error }>;
@@ -122,35 +122,98 @@ GRANT SELECT ON sm_leads_stats TO authenticated;
 } else {
   // Supabase 클라이언트 생성 (또는 API 키가 없는 경우 더미 클라이언트)
   const createClient = (): DummyClient => {
-    // 더미 클라이언트 - 실제 작업 대신 로깅만 수행
+    // 더미 클라이언트 - 실제 작업 대신 로깅만 수행하고 개발 시 빈 데이터 배열 반환
     /* eslint-disable @typescript-eslint/no-unused-vars */
     let _client: DummyClient;
     
+    // 더미 데이터 생성 (개발 환경에서 UI 테스트를 위함)
+    const dummyLeads = [
+      {
+        id: '1',
+        email: 'test1@example.com',
+        source: 'signup',
+        marketing_consent: true,
+        created_at: new Date().toISOString()
+      },
+      {
+        id: '2',
+        email: 'test2@example.com',
+        source: 'free_trial',
+        marketing_consent: false,
+        created_at: new Date(Date.now() - 86400000).toISOString() // 하루 전
+      }
+    ];
+    
+    const dummyButtonClicks = [
+      {
+        id: '1',
+        button_type: 'signup_button',
+        created_at: new Date().toISOString()
+      },
+      {
+        id: '2',
+        button_type: 'free_trial_button',
+        created_at: new Date(Date.now() - 86400000).toISOString()
+      }
+    ];
+    
+    const dummyData: Record<string, any[]> = {
+      'sm_leads': dummyLeads,
+      'sm_button_clicks': dummyButtonClicks,
+      'sm_leads_stats': [
+        { source: 'signup', lead_count: 1, first_lead: new Date().toISOString(), last_lead: new Date().toISOString() },
+        { source: 'free_trial', lead_count: 1, first_lead: new Date(Date.now() - 86400000).toISOString(), last_lead: new Date(Date.now() - 86400000).toISOString() }
+      ],
+      'sm_button_clicks_stats': [
+        { button_type: 'signup_button', click_count: 1, first_click: new Date().toISOString(), last_click: new Date().toISOString() },
+        { button_type: 'free_trial_button', click_count: 1, first_click: new Date(Date.now() - 86400000).toISOString(), last_click: new Date(Date.now() - 86400000).toISOString() }
+      ]
+    };
+    
     _client = {
-      from: ((table: string) => ({
-        insert: (data: unknown[]) => {
-          console.log('Supabase not configured. Would insert into', table, ':', data);
-          return Promise.resolve({ error: null });
-        },
-        select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => {
-          console.log('Supabase not configured. Would select:', column, options);
-          return {
-            order: (column: string, options?: { ascending?: boolean }) => {
-              console.log('Supabase not configured. Would order by:', column, options);
-              return Promise.resolve({ data: null, error: { code: '404', message: 'Supabase not configured' } });
-            },
-            data: null,
-            error: { code: '404', message: 'Supabase not configured' }
-          };
-        }
-      })),
+      from: ((table: string) => {
+        console.log(`[개발 모드] 테이블 접근: ${table}`);
+        
+        return {
+          insert: (data: unknown[]) => {
+            console.log('[개발 모드] 인서트 작업:', table, data);
+            return Promise.resolve({ error: null });
+          },
+          select: (column: string, options?: { count?: 'exact' | 'planned' | 'estimated'; head?: boolean }) => {
+            console.log('[개발 모드] 셀렉트 작업:', table, column, options);
+            
+            // 더미 데이터 반환을 위한 객체
+            const returnObj = {
+              order: (column: string, options?: { ascending?: boolean }) => {
+                console.log('[개발 모드] 정렬 작업:', column, options);
+                // 개발 환경에서는 더미 데이터를 반환
+                const tableData = dummyData[table] || [];
+                
+                // 정렬 로직 (간단한 구현)
+                const sortedData = [...tableData].sort((a, b) => {
+                  if (options?.ascending === false) {
+                    return new Date(b[column]).getTime() - new Date(a[column]).getTime();
+                  }
+                  return new Date(a[column]).getTime() - new Date(b[column]).getTime();
+                });
+                
+                return Promise.resolve({ data: sortedData, error: null });
+              },
+              data: dummyData[table] || [],
+              error: null
+            };
+            
+            return returnObj;
+          }
+        };
+      }),
       rpc: (fn: string, params?: Record<string, unknown>) => {
-        console.log('Supabase not configured. Would call RPC function:', fn, params);
+        console.log('[개발 모드] RPC 함수 호출:', fn, params);
         return Promise.resolve({ data: null, error: null });
       }
     };
     
-    console.warn('Supabase URL or Key not properly configured. Using dummy client.');
+    console.warn('Supabase URL 또는 API 키가 제대로 설정되지 않았습니다. 개발 모드로 실행 중입니다.');
     return _client;
     /* eslint-enable @typescript-eslint/no-unused-vars */
   };
